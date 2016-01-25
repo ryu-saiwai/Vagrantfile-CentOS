@@ -68,6 +68,11 @@ Vagrant.configure(2) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
+  config.vm.synced_folder my_conf['sync_host_playbook_dir'], my_conf['sync_guest_playbook_dir'], :create => "true", :mount_options => ['dmode=755', 'fmode=644']
+
+  config.vm.synced_folder my_conf['sync_dir'], my_conf['document_root'], :create => "true", :mount_options => ['dmode=755', 'fmode=644']
+  config.vm.synced_folder my_conf['sync_host_scripts_dir'], my_conf['sync_guest_scripts_dir'], :create => "true", :mount_options => ['dmode=755', 'fmode=644']
+
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
