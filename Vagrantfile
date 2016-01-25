@@ -1,3 +1,8 @@
+# encoding: utf-8
+# vim: ft=ruby expandtab shiftwidth=2 tabstop=2
+
+require 'yaml'
+
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -6,6 +11,29 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
+
+  # Load default configuration file
+  # -------------------------------------------------------------------------------------------
+  my_conf = YAML.load(
+    File.open(
+      File.join(File.dirname(__FILE__), 'provision/default.yml'),
+      File::RDONLY
+    ).read
+  )
+
+  #
+  if File.exists?(File.join(File.dirname(__FILE__), 'site.yml'))
+    my_site = YAML.load(
+      File.open(
+        File.join(File.dirname(__FILE__), 'site.yml'),
+        File::RDONLY
+      ).read
+    )
+    my_conf.merge!(my_site) if my_site.is_a?(Hash)
+  end
+  # -------------------------------------------------------------------------------------------
+
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -26,7 +54,8 @@ Vagrant.configure(2) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.hostname = my_conf['hostname']
+  config.vm.network "private_network", ip: my_conf['ip']
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
