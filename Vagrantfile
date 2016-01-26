@@ -69,7 +69,6 @@ Vagrant.configure(2) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
 
   config.vm.synced_folder my_conf['sync_host_playbook_dir'], my_conf['sync_guest_playbook_dir'], :create => "true", :mount_options => ['dmode=755', 'fmode=644']
-
   config.vm.synced_folder my_conf['sync_dir'], my_conf['document_root'], :create => "true", :mount_options => ['dmode=755', 'fmode=644']
   config.vm.synced_folder my_conf['sync_host_scripts_dir'], my_conf['sync_guest_scripts_dir'], :create => "true", :mount_options => ['dmode=755', 'fmode=644']
 
@@ -86,7 +85,6 @@ Vagrant.configure(2) do |config|
   # end
   #
   # View the documentation for the provider you are using for more
-  # information on available options.
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
   # such as FTP and Heroku are also available. See the documentation at
@@ -102,4 +100,14 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = my_conf['sync_host_playbook_dir'] + "/" + "playbook.yml"
+    ansible.inventory_path = my_conf['vagrant_inventory_dir'] + "/" + "hosts"
+    ansible.limit = "all"
+    ansible.verbose = "v"
+  end
+
+  #config.vm.provision :shell, :inline => "echo hello world"　
+
 end
